@@ -2,7 +2,8 @@
 
 The service runs on http://localhost:5001. There is a API controller for order creation (`OrderController`).
 
-Sh
+The sample below uses HTTPie client to send the requests.
+
 ### Shoe Store Tenant
 The tenant 100 is a shoe store. It has the following products:
 
@@ -14,7 +15,7 @@ The tenant 100 is a shoe store. It has the following products:
 To create a shoe order:
 
 ```
-http post http://localhost:5001/order/shoestore/create/ < CreateShoeOrder.json
+http post http://localhost:5001/order/shoestore/create Customer="+610423443125" ProductId=1 Quantity=1
 ```
 
 ### Watch Store Tenant
@@ -28,6 +29,6 @@ The tenant 200 is a watch store. It has the following products:
 To create a watch order:
 
 ```
-http post http://localhost:5001/order/watchstore/create/ < CreateWatchOrder.json
+http post http://localhost:5001/order/watchstore/create Customer="someone@gmail.com" ProductId=2 Quantity=5
 ```
 

@@ -11,7 +11,7 @@ namespace Backend
     {
         public async Task Handle(CreateOrderCommand message, IMessageHandlerContext context)
         {
-            Product product = default;
+            Product product = default;    
             
             await context.WithDataContext(db =>
             {
@@ -26,10 +26,9 @@ namespace Backend
                 db.Orders.Add(order);
             });
             
-            var store = context.GetStoreId();
-            Console.WriteLine($"Order command for {store} tenant stored (Product={product.Name}).");
+            Console.WriteLine($"Order command for (Product={product.Name}) stored.");
 
-            await context.SendForTenant(store, new SendCustomerReceipt
+            await context.SendForTenant(new SendCustomerReceipt
             {
                 Customer = message.Customer
             });

@@ -13,10 +13,11 @@ namespace Frontend
             return session.Send(message, sendOption);
         }
         
-        public static Task SendForTenant<T>(this IMessageHandlerContext session, string store, T message)
+        public static Task SendForTenant<T>(this IMessageHandlerContext session, T message)
         {
             var sendOption = new SendOptions();
-            sendOption.SetHeader(HeaderKeys.StoreId, store);
+            var tenant = session.MessageHeaders[HeaderKeys.StoreId];
+            sendOption.SetHeader(HeaderKeys.StoreId, tenant);
             return session.Send(message, sendOption);
         }
     }
