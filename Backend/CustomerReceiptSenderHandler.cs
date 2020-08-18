@@ -1,22 +1,22 @@
 using System.Threading.Tasks;
-using Backend.Services;
 using Messages;
+using Messages.TenantComponents;
 using NServiceBus;
 
 namespace Backend
 {
     public class CustomerReceiptSenderHandler : IHandleMessages<SendCustomerReceipt>
     {
-        private readonly MessageReceiptServiceFactory receiptServiceFactory;
+        private readonly TenantMessagingFactory receiptFactory;
 
-        public CustomerReceiptSenderHandler(MessageReceiptServiceFactory receiptServiceFactory)
+        public CustomerReceiptSenderHandler(TenantMessagingFactory receiptFactory)
         {
-            this.receiptServiceFactory = receiptServiceFactory;
+            this.receiptFactory = receiptFactory;
         }
         
         public Task Handle(SendCustomerReceipt message, IMessageHandlerContext context)
         {
-            var service = receiptServiceFactory.CreateSender();
+            var service = receiptFactory.CreateSender();
             
             return service.SendReceipt(message.Customer);
         }

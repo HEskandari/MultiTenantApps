@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Frontend.Model;
 using Messages;
+using Messages.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NServiceBus;
 
@@ -39,6 +41,8 @@ namespace Frontend.Controllers
                 ProductID = orderInfo.ProductID,
                 Quantity = orderInfo.Quantity
             });
+            
+            Console.WriteLine($"Sent the order request for {store}");
             
             return Ok($"{store}-OrderAccepted");
         }

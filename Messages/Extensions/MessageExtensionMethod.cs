@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using Messages;
 using NServiceBus;
 
-namespace Frontend
+namespace Messages.Extensions
 {
     public static class MessageExtensionMethod
     {
@@ -10,14 +9,6 @@ namespace Frontend
         {
             var sendOption = new SendOptions();
             sendOption.SetHeader(HeaderKeys.StoreId, store);
-            return session.Send(message, sendOption);
-        }
-        
-        public static Task SendForTenant<T>(this IMessageHandlerContext session, T message)
-        {
-            var sendOption = new SendOptions();
-            var tenant = session.MessageHeaders[HeaderKeys.StoreId];
-            sendOption.SetHeader(HeaderKeys.StoreId, tenant);
             return session.Send(message, sendOption);
         }
     }

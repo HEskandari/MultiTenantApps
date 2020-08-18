@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Backend.Model;
-using Frontend;
 using Messages;
 using NServiceBus;
 
@@ -9,26 +8,29 @@ namespace Backend
 {
     public class OrderPlacementHandler : IHandleMessages<CreateOrderCommand>
     {
+        private readonly IDataContextProvider<StoreDataContext> dataContextProvider;
+        
+        public OrderPlacementHandler(IDataContextProvider<StoreDataContext> dataContextProvider)
+        {
+            this.dataContextProvider = dataContextProvider;
+        }
+        
         public async Task Handle(CreateOrderCommand message, IMessageHandlerContext context)
         {
-            Product product = default;    
+            var dbContext = dataContextProvider.GetDataContext(context);
+            var product = await dbContext.Products.FindAsync(message.ProductID);
             
-            await context.WithDataContext(db =>
+            var order = new Order
             {
-                product = db.Products.Find(message.ProductID);
-                
-                var order = new Order
-                {
-                    ProductId = message.ProductID,
-                    Quantity = message.Quantity
-                };
+                ProductId = message.ProductID,
+                Quantity = message.Quantity
+            };
 
-                db.Orders.Add(order);
-            });
+            await dbContext.Orders.AddAsync(order);
             
             Console.WriteLine($"Order command for (Product={product.Name}) stored.");
 
-            await context.SendForTenant(new SendCustomerReceipt
+            await context.Send(new SendCustomerReceipt
             {
                 Customer = message.Customer
             });

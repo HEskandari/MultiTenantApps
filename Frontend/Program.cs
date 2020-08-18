@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using Messages;
+using Messages.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
@@ -20,6 +21,7 @@ namespace Frontend
 
                 config.EnableInstallers();
                 config.SendFailedMessagesTo("error");
+                config.AutoFlowTenantInformation();
                 
                 var transport = config.UseTransport<RabbitMQTransport>();
                 transport.ConnectionString(connectionString);
@@ -45,8 +47,9 @@ namespace Frontend
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(k => k.ListenAnyIP(5001));
-                    webBuilder.UseUrls("http://*:5001");
+                    webBuilder.UseKestrel(options => options.ListenAnyIP(5001));
+                    //webBuilder.ConfigureKestrel(k => k.ListenAnyIP(5001));
+                    //webBuilder.UseUrls("http://*:5001");
                     webBuilder.UseStartup<Startup>();
                 });
         }

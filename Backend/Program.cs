@@ -1,6 +1,6 @@
-﻿using Backend.Services;
-using Frontend;
-using Messages;
+﻿using Messages;
+using Messages.Extensions;
+using Messages.TenantComponents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
@@ -21,6 +21,8 @@ namespace Backend
 
                 config.EnableInstallers();
                 config.SendFailedMessagesTo("error");
+                config.UseDataContextUnitOfWork<StoreDataContext>();
+                config.AutoFlowTenantInformation();
 
                 var transport = config.UseTransport<RabbitMQTransport>();
                 transport.ConnectionString(connectionString);
@@ -40,16 +42,12 @@ namespace Backend
                 //StoreDataContext.GenerateDatabase(dbConnection, "MultiTenantApp_200");
                 #endregion
                 
-                #region Setup Pipeline 
-                config.Pipeline.Register(new TenantBasedBehavior(),  "Initializes the tenant factory.");
-                #endregion
-                
                 return config;
             });
 
             builder.ConfigureServices(svc =>
             {
-                svc.AddSingleton<MessageReceiptServiceFactory>();
+                svc.AddSingleton<TenantMessagingFactory>();
             });
             
             builder.Build().Run();

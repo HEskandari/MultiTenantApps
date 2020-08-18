@@ -1,8 +1,8 @@
 using System;
 
-namespace Backend.Services
+namespace Messages.TenantComponents
 {
-    public class MessageReceiptServiceFactory
+    public class TenantMessagingFactory
     {
         private string tenant;
         

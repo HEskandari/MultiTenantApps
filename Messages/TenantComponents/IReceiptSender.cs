@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Backend.Services
+namespace Messages.TenantComponents
 {
     public interface IReceiptSender
     {

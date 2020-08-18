@@ -1,7 +1,6 @@
-using Messages;
 using NServiceBus;
 
-namespace Frontend
+namespace Messages.Extensions
 {
     public static class MessageRoutingExtensions
     {

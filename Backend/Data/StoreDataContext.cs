@@ -7,22 +7,21 @@ namespace Backend
 {
     public class StoreDataContext : DbContext
     {
-        DbConnection connection;
-
-        public StoreDataContext()
+        public StoreDataContext(DbContextOptions<StoreDataContext> options) : base(options)
         {
         }
         
-        public StoreDataContext(DbConnection connection)
+        public StoreDataContext(DbConnection connection) : base(CreateDbOptions(connection))
         {
-            this.connection = connection;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        private static DbContextOptions CreateDbOptions(DbConnection connection)
         {
-            optionsBuilder.UseSqlServer(connection);
+            var builder = new DbContextOptionsBuilder<StoreDataContext>();
+            builder.UseSqlServer(connection);
+            return builder.Options;
         }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
